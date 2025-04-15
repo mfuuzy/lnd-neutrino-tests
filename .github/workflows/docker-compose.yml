@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 检出代码
+    - name: checkout code
       uses: actions/checkout@v3
 
     - name: 安装 Docker Compose
@@ -27,19 +27,19 @@ jobs:
     - name: 初始化 Wallet
       run: |
         docker compose exec lnd bash /scripts/start.sh
-#
-#     - name: lncli getinfo
-#       run: |
-#         docker compose exec lnd lncli --network testnet getinfo
 
     - name: 等待生成更多日志
       run: |
-        echo "等待容器启动..."
+        echo "等待生成更多日志..."
         sleep 300  # 或 curl +重试策略检查服务是否可访问
 
     - name: 查看 peer 连接
       run: |
         docker logs lnd|grep peer
+
+    - name: lncli getinfo
+      run: |
+        docker compose exec lnd lncli --network testnet getinfo
 
     - name: 停止服务
       if: always()
