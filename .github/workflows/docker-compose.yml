@@ -27,10 +27,10 @@ jobs:
     - name: 初始化 Wallet
       run: |
         docker compose exec lnd bash /scripts/start.sh
-
-    - name: lncli getinfo
-      run: |
-        docker compose exec lnd lncli --network testnet getinfo
+#
+#     - name: lncli getinfo
+#       run: |
+#         docker compose exec lnd lncli --network testnet getinfo
 
     - name: 等待生成更多日志
       run: |
