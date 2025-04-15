@@ -24,6 +24,7 @@ if [ -f "$SEED_FILE" ]; then
 else
     echo "File $SEED_FILE does not exist, running create_account.sh..."
     /scripts/./create_account.sh >> $SEED_FILE
+    cat $SEED_FILE
     echo "Output written to SEED_FILE."
 fi
 exit 0
