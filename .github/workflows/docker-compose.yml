@@ -1,0 +1,37 @@
+name: Docker Compose CI
+
+on: [push, pull_request]
+
+jobs:
+  compose-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v3
+
+    - name: 安装 Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
+    - name: 启动 Docker Compose 服务
+      run: docker-compose up -d
+
+    - name: 等待服务启动
+      run: |
+        echo "等待容器启动..."
+        sleep 10  # 或 curl +重试策略检查服务是否可访问
+
+    - name: 初始化 Wallet
+      run: |
+        docker compose exec lnd bash /scripts/start.sh
+
+    - name: （可选）运行你自己的测试脚本
+      run: |
+        docker compose exec lnd lncli --network testnet getinfo
+
+    - name: 停止服务
+      if: always()
+      run: docker-compose down
