@@ -40,9 +40,7 @@ jobs:
         docker compose exec lnd lncli connect 034ea80f8b148c750463546bd999bf7321a0e6dfc60aaf84bd0400a2e8d376c0d5@213.174.156.79:9735
         docker compose exec lnd lncli connect 035e4ff418fc8b5554c5d9eea66396c227bd429a3251c8cbc711002ba215bfc226@170.75.163.209:9735
         docker compose exec lnd lncli connect 037659a0ac8eb3b8d0a720114efc861d3a940382dcfa1403746b4f8f6b2e8810ba@34.78.139.195:9735
-        docker compose exec lnd lncli connect 037f990e61acee8a7697966afd29dd88f3b1f8a7b14d625c4f8742bd952003a590@185.5.53.91:9735
         docker compose exec lnd lncli connect 03a93b87bf9f052b8e862d51ebbac4ce5e97b5f4137563cd5128548d7f5978dda9@134.209.139.244:9735
-        docker compose exec lnd lncli connect 0322d0e43b3d92d30ed187f4e101a9a9605c3ee5fc9721e6dac3ce3d7732fbb13e@164.92.106.32:9735
         docker compose exec lnd lncli connect 02c197ffa4c2aa4105dd4c4b7279ba1b9061b22910ebbfa759b0001bed9ee48a16@18.181.210.139:9735
 
         for i in {1..30}; do
