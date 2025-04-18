@@ -32,16 +32,16 @@ jobs:
       run: |
         sleep 600  # 或 curl +重试策略检查服务是否可访问
 
-        docker compose exec lnd lncli connect 03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f@3.33.236.230:9735
-        docker compose exec lnd lncli connect 03cde60a6323f7122d5178255766e38114b4722ede08f7c9e0c5df9b912cc201d6@34.65.85.39:9745
-        docker compose exec lnd lncli connect 0294ac3e099def03c12a37e30fe5364b1223fd60069869142ef96580c8439c2e0a@8.210.134.135:26658
-        docker compose exec lnd lncli connect 033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025@34.65.85.39:9735
-        docker compose exec lnd lncli connect 02f1a8c87607f415c8f22c00593002775941dea48869ce23096af27b0cfdcc0b69@193.118.169.108:9735
-        docker compose exec lnd lncli connect 034ea80f8b148c750463546bd999bf7321a0e6dfc60aaf84bd0400a2e8d376c0d5@213.174.156.79:9735
-        docker compose exec lnd lncli connect 035e4ff418fc8b5554c5d9eea66396c227bd429a3251c8cbc711002ba215bfc226@170.75.163.209:9735
-        docker compose exec lnd lncli connect 037659a0ac8eb3b8d0a720114efc861d3a940382dcfa1403746b4f8f6b2e8810ba@34.78.139.195:9735
-        docker compose exec lnd lncli connect 03a93b87bf9f052b8e862d51ebbac4ce5e97b5f4137563cd5128548d7f5978dda9@134.209.139.244:9735
-        docker compose exec lnd lncli connect 02c197ffa4c2aa4105dd4c4b7279ba1b9061b22910ebbfa759b0001bed9ee48a16@18.181.210.139:9735
+        docker compose exec lnd lncli connect 03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f@3.33.236.230:9735 || true
+        docker compose exec lnd lncli connect 03cde60a6323f7122d5178255766e38114b4722ede08f7c9e0c5df9b912cc201d6@34.65.85.39:9745 || true
+        docker compose exec lnd lncli connect 0294ac3e099def03c12a37e30fe5364b1223fd60069869142ef96580c8439c2e0a@8.210.134.135:26658 || true
+        docker compose exec lnd lncli connect 033d8656219478701227199cbd6f670335c8d408a92ae88b962c49d4dc0e83e025@34.65.85.39:9735 || true
+        docker compose exec lnd lncli connect 02f1a8c87607f415c8f22c00593002775941dea48869ce23096af27b0cfdcc0b69@193.118.169.108:9735 || true
+        docker compose exec lnd lncli connect 034ea80f8b148c750463546bd999bf7321a0e6dfc60aaf84bd0400a2e8d376c0d5@213.174.156.79:9735 || true
+        docker compose exec lnd lncli connect 035e4ff418fc8b5554c5d9eea66396c227bd429a3251c8cbc711002ba215bfc226@170.75.163.209:9735 || true
+        docker compose exec lnd lncli connect 037659a0ac8eb3b8d0a720114efc861d3a940382dcfa1403746b4f8f6b2e8810ba@34.78.139.195:9735 || true
+        docker compose exec lnd lncli connect 03a93b87bf9f052b8e862d51ebbac4ce5e97b5f4137563cd5128548d7f5978dda9@134.209.139.244:9735 || true
+        docker compose exec lnd lncli connect 02c197ffa4c2aa4105dd4c4b7279ba1b9061b22910ebbfa759b0001bed9ee48a16@18.181.210.139:9735 || true
 
         for i in {1..30}; do
           CHAIN_SYNC=`docker compose exec lnd lncli getinfo|jq '.synced_to_chain'`
