@@ -1,9 +1,9 @@
 #!/usr/bin/expect -f
 
 set wallet_password "password123"
-set network "mainnet"
+set network "testnet"
 
-spawn lncli --network=mainnet create
+spawn lncli --network=${network} create
 
 expect "Input wallet password:"
 send "$wallet_password\r"
