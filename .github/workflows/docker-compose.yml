@@ -1,0 +1,68 @@
+name: Docker Compose CI
+
+on: [push, pull_request]
+
+jobs:
+  compose-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout code
+      uses: actions/checkout@v3
+
+    - name: 安装 Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
+    - name: 启动 Docker Compose 服务
+      run: docker-compose up -d
+
+    - name: 等待服务启动
+      run: |
+        echo "等待容器启动..."
+        sleep 20  # 或 curl +重试策略检查服务是否可访问
+
+    - name: 初始化 Wallet
+      run: |
+        docker compose exec lnd bash /scripts/start.sh
+
+    - name: 等待 LND 同步完成
+      run: |
+        sleep 600  # 或 curl +重试策略检查服务是否可访问
+
+        # mainnet
+        #docker compose exec lnd lncli connect 03864ef025fde8fb587d989186ce6a4a186895ee44a926bfc370e2c366597a3f8f@3.33.236.230:9735 || true
+        #docker compose exec lnd lncli connect 03cde60a6323f7122d5178255766e38114b4722ede08f7c9e0c5df9b912cc201d6@34.65.85.39:9745 || true
+        #docker compose exec lnd lncli connect 0294ac3e099def03c12a37e30fe5364b1223fd60069869142ef96580c8439c2e0a@8.210.134.135:26658 || true
+
+        # testnet
+        docker compose exec lnd lncli --network testnet connect 038863cf8ab91046230f561cd5b386cbff8309fa02e3f0c3ed161a3aeb64a643b9@203.132.94.196:9735 || true
+        docker compose exec lnd lncli --network testnet connect 0225ff2ae6a3d9722b625072503c2f64f6eddb78d739379d2ee55a16b3b0ed0a17@203.132.94.196:19735 || true
+        docker compose exec lnd lncli --network testnet connect 03781444afe27babf724304c25370f195d9d955065d7894539ed7db5fe596badb8@138.197.57.50:19735 || true
+
+        for i in {1..30}; do
+          CHAIN_SYNC=`docker compose exec lnd lncli --network testnet getinfo|jq '.synced_to_chain'`
+          GRAPH_SYNC=`docker compose exec lnd lncli --network testnet getinfo|jq '.synced_to_graph'`
+
+          if [[ "$CHAIN_SYNC" == "true" && "$GRAPH_SYNC" == "true" ]]; then
+            echo "✅ LND 已完成同步"
+            break
+          fi
+            echo "⏳ 同步中..."
+            sleep 300
+        done
+
+
+    - name: 查看 peer 连接
+      run: |
+        docker logs lnd|grep peer
+
+    - name: lncli getinfo
+      run: |
+        docker compose exec lnd lncli --network testnet getinfo
+
+    - name: 停止服务
+      if: always()
+      run: docker-compose down

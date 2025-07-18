@@ -1,0 +1,54 @@
+name: CI on Self-Hosted Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name to build'
+        required: true
+        default: 'main'
+
+jobs:
+  build-and-test:
+    name: Build and Test on Self-Hosted Runner
+    runs-on: [self-hosted, linux, X64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: ls
+        run: |
+          pwd
+          ls
+
+      - name: Set timestamp
+        id: set_time
+        run: echo "value=$(date +%Y%m%d%H%M%S)" >> "$GITHUB_OUTPUT"
+
+      - name: 启动 Docker Compose 服务
+        run: |
+          sudo docker save go-console:t2_33  -o go-console:t2_33
+
+      - name: 等待服务启动
+        run: |
+          echo "等待容器启动..."
+          sleep 5  # 或 curl +重试策略检查服务是否可访问
+
+      - name: 停止服务
+        run: |
+         ssh root@2.2.2.2 'docker load -i /tmp/go-console:t2_33'
+
+      - name: Use timestamp 1
+        run: |
+          echo "The time is: ${{ steps.set_time.outputs.value }}"
+
+      - name: docker start
+        run: |
+         ssh root@2.2.2.2'docker run -dit go-console:t2_33'
+
+      - name: echo
+        run: |
+          ssh root@2.2.2.2 'rm -rf  /tmp/go-console:t2_33'

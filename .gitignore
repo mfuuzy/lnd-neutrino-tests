@@ -1,0 +1,9 @@
+.idea
+.idea/
+__pycache__
+__pycache__/
+.env
+data
+data/*
+scripts/seed.txt
+github_token.txt
